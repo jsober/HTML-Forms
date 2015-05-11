@@ -3,7 +3,7 @@ package HTML::Forms::FormElement;
 use Moo;
 use Types::Standard qw(-types);
 
-with 'HTML::Forms::Role::FormElement';
+extends 'HTML::Forms::FormElement';
 
 has size => (
     is       => 'ro',
@@ -11,19 +11,15 @@ has size => (
     required => 0,
 );
 
-sub no_value {
-    return '';
-}
+around get_attributes => sub {
+    my ($self, $orig, @args) = @_;
+    my $result = $self->$orig->(@args);
 
-sub get_attributes {
-    my $self = shift;
     return {
-        type  => 'text',
-        id    => $self->id,
-        name  => $self->name,
-        value => $self->get_value,
+        %$result,
+        type => 'text',
         ($self->size ? (size => $self->size) : ()),
     };
-}
+};
 
 1;

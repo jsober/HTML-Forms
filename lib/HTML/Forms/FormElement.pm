@@ -1,11 +1,8 @@
 package HTML::Forms::FormElement;
 
-use Moo::Role;
+use Moo;
 use Types::Standard qw(-types);
 use HTML::Escape qw(escape_html);
-
-requires 'no_value';
-requires 'get_attibutes';
 
 has name => (
     is        => 'ro',
@@ -38,19 +35,28 @@ has attributes => (
     required  => 0,
 );
 
+sub empty_value {
+    return '';
+}
+
 sub get_value {
     my $self = shift;
     return $self->value if $self->has_value;
     return $self->default_value if $self->has_default_value;
-    return $self->no_value;
+    return $self->empty_value;
 }
 
-sub serialize {
+sub get_attributes {
     my $self = shift;
-    return sprintf '<input %s />', $self->_serialize_attributes;
+    return { %{$self->attributes}, value => $self->value };
 }
 
-sub _serialize_attributes {
+sub render {
+    my $self = shift;
+    return sprintf '<input %s />', $self->render_attributes;
+}
+
+sub render_attributes {
     my $self = shift;
     my %attr = (%{$self->get_attributes}, $self->attributes);
     return join ' ', map { sprintf '%s="%s"', $_, escape_html($attr{$_}) } keys %$attr;

@@ -3,6 +3,7 @@ package HTML::Forms::Role::Input;
 use Moo;
 use MooX::HandlesVia;
 use Types::Standard qw(-types);
+use Carp;
 
 has label => (
     is       => 'ro',
@@ -18,7 +19,8 @@ has form_element => (
         id        => 'id',
         name      => 'name',
         set_value => 'value',
-        get_value => 'value',
+        get_value => 'get_value',
+        has_data  => 'has_value',
     }
 );
 
@@ -34,39 +36,45 @@ has validators => (
 );
 
 has errors => (
-    is       => 'rw',
-    isa      => Map[Str, Str],
-    default  => sub {{}},
-    init_arg => undef,
+    is          => 'rw',
+    isa         => ArrayRef[Str],
+    default     => sub {[]},
+    init_arg    => undef,
 );
 
-has value => (
-    is        => 'rw',
-    required  => 0,
-    predicate => 1,
+before errors => sub {
+    my $self = shift;
+    $self->is_valid;
+};
+
+has is_valid => (
+    is        => 'lazy',
+    isa       => Bool,
+    init_arg  => undef,
+    predicate => 'is_validated',
 );
 
-sub get_errors {
-    my ($self, $value) = @_;
+sub _build_is_valid {
+    my $self = shift;
+
+    croak sprintf('Missing for data for %s', $self->name)
+        unless $self->has_data;
 
     foreach my $validator ($self->validators) {
-        my $error = $validator->get_error($value);
-
-        if (defined $error) {
+        if (defined (my $error = $validator->get_error($self->get_value))) {
             push @{$self->{errors}}, $error;
         }
     }
 
-    return @errors;
+    return @{$self->{errors}} ? 0 : 1;
 }
 
-sub serialize {
+sub render {
     my $self = shift;
-    $self->form_element->value($self->value) if $self->has_value;
-    return $self->form_element->serialize;
+    return $self->form_element->render;
 }
 
-sub serialize_label {
+sub render_label {
     my $self = shift;
     return sprintf '<label for="%s">%s</label>', html_escape($self->id), html_escape($self->label);
 }
