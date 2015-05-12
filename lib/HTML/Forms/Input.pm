@@ -19,6 +19,7 @@ has form_element => (
         id        => 'id',
         name      => 'name',
         set_value => 'value',
+        value     => 'value',
         get_value => 'get_value',
         has_data  => 'has_value',
     }
@@ -60,9 +61,12 @@ sub _build_is_valid {
     croak sprintf('Missing for data for %s', $self->name)
         unless $self->has_data;
 
+    my $value = $self->get_value;
+    my $name  = $self->name;
+
     foreach my $validator ($self->validators) {
-        if (defined (my $error = $validator->get_error($self->get_value))) {
-            push @{$self->{errors}}, $error;
+        if (defined (my $error = $validator->get_error($value))) {
+            push @{$self->{errors}}, sprintf($error, $name);
         }
     }
 

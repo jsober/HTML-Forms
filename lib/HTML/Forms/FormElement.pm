@@ -48,7 +48,8 @@ sub get_value {
 
 sub get_attributes {
     my $self = shift;
-    return { %{$self->attributes}, value => $self->value };
+    my $attr = $self->attributes;
+    return { %$attr, value => $self->get_value };
 }
 
 sub render {
@@ -58,8 +59,8 @@ sub render {
 
 sub render_attributes {
     my $self = shift;
-    my %attr = (%{$self->get_attributes}, $self->attributes);
-    return join ' ', map { sprintf '%s="%s"', $_, escape_html($attr{$_}) } keys %$attr;
+    my $attr = $self->get_attributes;
+    return join ' ', map { sprintf '%s="%s"', $_, escape_html($attr->{$_}) } keys %$attr;
 }
 
 1;

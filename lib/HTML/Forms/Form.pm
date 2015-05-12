@@ -1,11 +1,5 @@
 package HTML::Forms::Form;
 
-#-------------------------------------------------------------------------------
-# TODO:
-#   * Inputs available by name
-#   * Flag when data set
-#-------------------------------------------------------------------------------
-
 use Moo;
 use MooX::HandlesVia;
 use Types::Standard qw(-types);

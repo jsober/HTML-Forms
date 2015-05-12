@@ -1,4 +1,4 @@
-package HTML::Forms::FormElement;
+package HTML::Forms::FormElement::Text;
 
 use Moo;
 use Types::Standard qw(-types);
@@ -12,8 +12,9 @@ has size => (
 );
 
 around get_attributes => sub {
-    my ($self, $orig, @args) = @_;
-    my $result = $self->$orig->(@args);
+    my $orig   = shift;
+    my $self   = shift;
+    my $result = $self->$orig(@_);
 
     return {
         %$result,
