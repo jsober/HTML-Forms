@@ -83,11 +83,11 @@ sub _build_is_valid {
     return 1 unless $self->has_validators;
 
     my $value = $self->get_value;
-    my $name  = $self->name;
+    my $label = $self->label;
 
     foreach my $validator (@{$self->validators}) {
         if (defined (my $error = $validator->get_error($value))) {
-            push @{$self->{errors}}, sprintf($error, $name);
+            push @{$self->{errors}}, sprintf($error, $label);
         }
     }
 
@@ -125,6 +125,12 @@ sub render_attributes {
 sub render_label {
     my $self = shift;
     return sprintf '<label for="%s">%s</label>', escape_html($self->id), escape_html($self->label);
+}
+
+sub render_errors {
+    my $self  = shift;
+    my $items = join "\n", map { sprintf('<li>%s</li>', escape_html($_)) } @{$self->errors};
+    return sprintf "<ul>\n%s\n</ul>", $items;
 }
 
 1;

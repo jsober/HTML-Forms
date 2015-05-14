@@ -52,8 +52,7 @@ note 'is_valid';
 
 {
     my $input = get_input(value => 'foo');
-    $input->is_valid;
-    ok $@, 'is_valid: no validators';
+    ok $input->is_valid, 'is_valid: no validators';
 }
 
 {
@@ -66,7 +65,19 @@ note 'is_valid';
     my $input = get_input(value => '');
     $input->add_validator(HTML::Forms::Validator::Required->new());
     ok !$input->is_valid, 'is_valid: validators, bad data';
-    is_deeply $input->errors, ['foo is a required value'];
+    is_deeply $input->errors, ['Test Input is a required value'];
+}
+
+note 'render_errors';
+{
+    my $input = get_input(value => '');
+    $input->add_validator(HTML::Forms::Validator::Required->new());
+    $input->is_valid;
+    my $html = $input->render_errors;
+
+    tag_ok $html, 'ul';
+    tag_ok $html, 'li';
+    text_ok $html, 'Test Input is a required value';
 }
 
 done_testing;
