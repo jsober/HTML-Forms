@@ -1,8 +1,9 @@
-package HTML::Forms::Role::Input;
+package HTML::Forms::Input;
 
 use Moo;
 use MooX::HandlesVia;
 use Types::Standard qw(-types);
+use HTML::Escape qw(escape_html);
 use Carp;
 
 has label => (
@@ -13,7 +14,7 @@ has label => (
 
 has form_element => (
     is       => 'ro',
-    isa      => ConsumerOf['HTML::Forms::Role::FormElement'],
+    isa      => InstanceOf['HTML::Forms::FormElement'],
     required => 1,
     handles  => {
         id        => 'id',
@@ -22,6 +23,7 @@ has form_element => (
         value     => 'value',
         get_value => 'get_value',
         has_data  => 'has_value',
+        render    => 'render',
     }
 );
 
@@ -32,7 +34,8 @@ has validators => (
     required    => 0,
     handles_via => 'Array',
     handles     => {
-        add_validator => 'push',
+        add_validator  => 'push',
+        has_validators => 'count',
     }
 );
 
@@ -58,13 +61,15 @@ has is_valid => (
 sub _build_is_valid {
     my $self = shift;
 
-    croak sprintf('Missing for data for %s', $self->name)
+    croak sprintf('Missing form data for %s', $self->name)
         unless $self->has_data;
+
+    return 1 unless $self->has_validators;
 
     my $value = $self->get_value;
     my $name  = $self->name;
 
-    foreach my $validator ($self->validators) {
+    foreach my $validator (@{$self->validators}) {
         if (defined (my $error = $validator->get_error($value))) {
             push @{$self->{errors}}, sprintf($error, $name);
         }
@@ -80,7 +85,7 @@ sub render {
 
 sub render_label {
     my $self = shift;
-    return sprintf '<label for="%s">%s</label>', html_escape($self->id), html_escape($self->label);
+    return sprintf '<label for="%s">%s</label>', escape_html($self->id), escape_html($self->label);
 }
 
 1;
