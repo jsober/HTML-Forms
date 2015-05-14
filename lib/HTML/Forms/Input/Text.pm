@@ -1,9 +1,9 @@
-package HTML::Forms::FormElement::Text;
+package HTML::Forms::Input::Text;
 
 use Moo;
 use Types::Standard qw(-types);
 
-extends 'HTML::Forms::FormElement';
+extends 'HTML::Forms::Input';
 
 has size => (
     is       => 'ro',
