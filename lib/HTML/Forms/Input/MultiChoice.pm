@@ -21,6 +21,10 @@ around get_attributes => sub {
     return $result;
 };
 
+sub empty_value {
+    return [];
+}
+
 sub render_choice {
     my ($self, $id, $label, $value, $selected) = @_;
     my $sel = $selected ? ' selected' : '';

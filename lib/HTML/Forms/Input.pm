@@ -7,42 +7,17 @@ use Try::Tiny;
 use Carp;
 use HTML::Forms::Util;
 
-has name => (
-    is        => 'ro',
-    isa       => Str,
-    required  => 1,
-);
+has name => (is => 'ro', isa => Str, required  => 1);
 
-has id => (
-    is        => 'ro',
-    isa       => Str,
-    required  => 1,
-);
+has id => (is => 'ro', isa => Str, required  => 1);
 
-has attributes => (
-    is        => 'rw',
-    isa       => HashRef,
-    default   => sub {{}},
-    required  => 0,
-);
+has attributes => (is => 'rw', isa => HashRef, default => sub {{}}, required  => 0);
 
-has default => (
-    is        => 'ro',
-    required  => 0,
-    predicate => 1,
-);
+has default => (is => 'ro', required  => 0, predicate => 1);
 
-has value => (
-    is        => 'rw',
-    required  => 0,
-    predicate => 1,
-);
+has value => (is => 'rw', required  => 0, predicate => 1);
 
-has label => (
-    is       => 'ro',
-    isa      => Str,
-    required => 1,
-);
+has label => (is => 'ro', isa => Str, required => 1);
 
 has validators => (
     is       => 'rw',
@@ -57,10 +32,10 @@ has validators => (
 );
 
 has errors => (
-    is          => 'rw',
-    isa         => ArrayRef[Str],
-    default     => sub {[]},
-    init_arg    => undef,
+    is       => 'rw',
+    isa      => ArrayRef[Str],
+    default  => sub {[]},
+    init_arg => undef,
 );
 
 before errors => sub {

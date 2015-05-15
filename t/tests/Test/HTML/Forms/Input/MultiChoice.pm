@@ -49,4 +49,12 @@ sub render :Tests(13) {
     like $html, qr/<option id="$id-3" value="4">/, 'option 4 not selected';
 }
 
+sub default :Tests {
+    my $class = shift;
+    my $input = $class->input;
+    is_deeply $input->get_value, [], 'default value';
+    ok my $html = $input->render, 'call render';
+    unlike $html, qr/selected/, 'no options selected';
+}
+
 1;

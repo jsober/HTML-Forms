@@ -9,11 +9,8 @@ requires 'message';
 
 sub test {
     my ($self, $value) = @_;
-
     die HTML::Forms::ValidationError->new(msg => $self->message)
         unless $self->is_valid($value);
-
-    1;
 }
 
 1;
