@@ -113,7 +113,7 @@ sub get_attributes {
 
 sub render {
     my $self = shift;
-    return sprintf '<input %s />', $self->render_attributes;
+    return sprintf '<input %s>', $self->render_attributes;
 }
 
 sub render_attributes {

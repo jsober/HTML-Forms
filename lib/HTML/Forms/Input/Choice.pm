@@ -7,8 +7,8 @@ use HTML::Forms::Util;
 extends 'HTML::Forms::Input';
 
 has choices => (
-    is  => 'rw',
-    isa => Map[Defined, Defined],
+    is       => 'rw',
+    isa      => ArrayRef[Tuple[Str, Defined]],
     required => 1,
 );
 
@@ -20,20 +20,32 @@ around get_attributes => sub {
     return $result;
 };
 
+sub render_choice {
+    my ($self, $id, $label, $value, $selected) = @_;
+    my $sel = $selected ? ' selected' : '';
+    return sprintf '<option id="%s" value="%s"%s>%s</option>', e($id), e($value), $sel, e($label);
+}
+
+sub render_choice_group {
+    my ($self, $attributes, $choices) = @_;
+    return sprintf "<select %s>\n%s\n</select>", $attributes, join("\n", @$choices);
+}
+
 sub render {
     my $self = shift;
     my $selected = $self->get_value;
-    my @options;
+    my @choices;
 
-    foreach my $label (keys %{$self->choices}) {
-        my $val = $self->choices->{$label};
-        my $sel = $selected eq $val ? ' selected' : '';
-        my $opt = sprintf '<option value="%s"%s>%s</option>', e($val), $sel, e($label);
-        push @options, $opt;
+    my $idx = 0;
+    foreach my $tuple (@{$self->choices}) {
+        my ($label, $value) = @$tuple;
+        my $id = sprintf '%s-%d', $self->id, $idx;
+        my $choice = $self->render_choice($id, $label, $value, ($selected eq $value));
+        push @choices, $choice;
+        ++$idx;
     }
 
-    my $options = join "\n", @options;
-    return sprintf "<select %s>\n%s\n</select>", $self->render_attributes, $options;
+    return $self->render_choice_group($self->render_attributes, \@choices);
 }
 
 1;
