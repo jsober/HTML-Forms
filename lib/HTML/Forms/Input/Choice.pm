@@ -27,7 +27,7 @@ sub render {
 
     foreach my $label (keys %{$self->choices}) {
         my $val = $self->choices->{$label};
-        my $sel = $selected eq $val ? ' selected="selected"' : '';
+        my $sel = $selected eq $val ? ' selected' : '';
         my $opt = sprintf '<option value="%s"%s>%s</option>', e($val), $sel, e($label);
         push @options, $opt;
     }
