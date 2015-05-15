@@ -22,6 +22,7 @@ sub get_input {
     my $input_empty   = get_input();
     my $input_default = get_input(default => $default);
     my $input_value   = get_input(value => $value);
+    my $input_attr    = get_input(attributes => {foo => 'bar', baz => 'bat'});
 
     note 'get_value';
     is $input_empty->get_value,   '',       'get_value: no default value';
@@ -29,6 +30,10 @@ sub get_input {
     is $input_value->get_value,   $value,   'get_value: set value';
 
     note 'render';
+    ok my $html_attr = $input_attr->render, 'render: attributes';
+    tag_ok $html_attr, 'input', {id => $id, name => $name}, 'render: id and name present';
+    tag_ok $html_attr, 'input', {foo => 'bar', baz => 'bat'}, 'render: attributes present';
+
     ok my $html_empty   = $input_empty->render,   'render: call with empty value';
     ok my $html_default = $input_default->render, 'render: call with default value';
     ok my $html_value   = $input_value->render,   'render: call with set value';

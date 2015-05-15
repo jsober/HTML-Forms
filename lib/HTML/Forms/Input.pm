@@ -108,7 +108,7 @@ sub get_value {
 sub get_attributes {
     my $self = shift;
     my $attr = $self->attributes;
-    return { %$attr, value => $self->get_value };
+    return { %$attr, id => $self->id, name => $self->name, value => $self->get_value };
 }
 
 sub render {

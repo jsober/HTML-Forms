@@ -16,7 +16,7 @@ my $default = 'baz';
 # Create input
 my $input = new_ok($class, [label => $label, name => $name, id => $id, default => $default]);
 ok my $html = $input->render, 'call render';
-tag_ok $html, 'input', {value => $default, type => 'text'}, 'correct attributes';
+tag_ok $html, 'input', {value => $default, type => 'text'}, 'correct tag + attributes';
 
 $input = new_ok($class, [label => $label, name => $name, id => $id, default => $default, size => 25], 'sized');
 ok $html = $input->render, 'sized: call render';
