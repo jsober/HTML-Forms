@@ -1,19 +1,12 @@
 package HTML::Forms::Validator::Required;
 
-use Moo;
+use Moose;
 use Types::Standard qw(-types);
 use Carp;
 
 with 'HTML::Forms::Role::Validator';
 
-sub get_error {
-    my ($self, $value) = @_;
-
-    return '%s is a required value'
-        unless defined $value
-            && "$value" ne '';
-
-    return;
-}
+sub message  { '%s is a required value' }
+sub is_valid { defined $_[1] && "$_[1]" ne '' }
 
 1;

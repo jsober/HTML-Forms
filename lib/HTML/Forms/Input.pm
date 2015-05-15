@@ -1,8 +1,9 @@
 package HTML::Forms::Input;
 
-use Moo;
-use MooX::HandlesVia;
+use Moose;
+use MooseX::AttributeShortcuts;
 use Types::Standard qw(-types);
+use Try::Tiny;
 use Carp;
 use HTML::Forms::Util;
 
@@ -44,12 +45,12 @@ has label => (
 );
 
 has validators => (
-    is          => 'rw',
-    isa         => ArrayRef[ConsumerOf['HTML::Forms::Role::Validator']],
-    default     => sub {[]},
-    required    => 0,
-    handles_via => 'Array',
-    handles     => {
+    is       => 'rw',
+    isa      => ArrayRef[ConsumerOf['HTML::Forms::Role::Validator']],
+    default  => sub {[]},
+    required => 0,
+    traits   => ['Array'],
+    handles  => {
         add_validator  => 'push',
         has_validators => 'count',
     }
@@ -86,9 +87,17 @@ sub _build_is_valid {
     my $label = $self->label;
 
     foreach my $validator (@{$self->validators}) {
-        if (defined (my $error = $validator->get_error($value))) {
-            push @{$self->{errors}}, sprintf($error, $label);
+        try {
+            $validator->test($value);
         }
+        catch {
+            if (ref $_ && $_->isa('HTML::Forms::ValidationError')) {
+                push @{$self->{errors}}, $_->error_for($label);
+            }
+            else {
+                croak $_;
+            }
+        };
     }
 
     return @{$self->{errors}} ? 0 : 1;

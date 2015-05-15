@@ -1,7 +1,7 @@
 package HTML::Forms::Form;
 
-use Moo;
-use MooX::HandlesVia;
+use Moose;
+use MooseX::AttributeShortcuts;
 use Types::Standard qw(-types);
 use Carp;
 
@@ -61,7 +61,7 @@ sub input_names {
 
 sub set_data {
     my ($self, $data) = @_;
-    my @name = $self->input_names;
+    my @names = $self->input_names;
 
     foreach my $name (@names) {
         croak "Missing key for input $name"

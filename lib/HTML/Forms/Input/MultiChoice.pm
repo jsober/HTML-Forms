@@ -1,6 +1,6 @@
 package HTML::Forms::Input::MultiChoice;
 
-use Moo;
+use Moose;
 use Types::Standard qw(-types);
 use HTML::Forms::Util;
 

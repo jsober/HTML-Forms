@@ -1,6 +1,6 @@
 package HTML::Forms::Input::Text;
 
-use Moo;
+use Moose;
 use Types::Standard qw(-types);
 
 extends 'HTML::Forms::Input';
