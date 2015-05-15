@@ -12,17 +12,14 @@ has has_form_data => (
     init_arg => undef,
 );
 
-has is_validated => (
-    is       => 'rw',
-    isa      => Bool,
-    default  => sub {0},
-    init_arg => undef,
-);
-
 has input => (
-    is        => 'rw',
-    isa       => Map[Str, ConsumerOf['HTML::Forms::Input']],
-    default   => sub {{}},
+    is      => 'rw',
+    isa     => Map[Str, InstanceOf['HTML::Forms::Input']],
+    default => sub {{}},
+    traits  => ['Hash'],
+    handles => {
+        input_names => 'keys',
+    }
 );
 
 has is_valid => (
@@ -54,23 +51,14 @@ sub add_input {
     $self->input->{$input->name} = $input;
 }
 
-sub input_names {
-    my $self = shift;
-    return keys %{$self->input};
-}
-
 sub set_data {
     my ($self, $data) = @_;
     my @names = $self->input_names;
 
     foreach my $name (@names) {
-        croak "Missing key for input $name"
-            unless exists $data->{$name};
-    }
-
-    foreach my $name (@names) {
+        next unless exists $data->{$name};
         my $value = $data->{$name};
-        $self->input->set_value($value);
+        $self->input->value($value);
     }
 
     $self->has_form_data(1);

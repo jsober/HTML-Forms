@@ -10,7 +10,7 @@ sub compile :Tests(startup => 1) {
     use_ok $test->class;
 }
 
-sub is_valid :Tests {
+sub is_valid :Tests(4) {
     my $test = shift;
     my $validator = $test->class->new();
 
