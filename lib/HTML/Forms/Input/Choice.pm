@@ -2,7 +2,7 @@ package HTML::Forms::Input::Choice;
 
 use Moo;
 use Types::Standard qw(-types);
-use HTML::Escape qw(escape_html);
+use HTML::Forms::Util;
 
 extends 'HTML::Forms::Input';
 
@@ -28,7 +28,7 @@ sub render {
     foreach my $label (keys %{$self->choices}) {
         my $val = $self->choices->{$label};
         my $sel = $selected eq $val ? ' selected="selected"' : '';
-        my $opt = sprintf '<option value="%s"%s>%s</option>', escape_html($val), $sel, escape_html($label);
+        my $opt = sprintf '<option value="%s"%s>%s</option>', e($val), $sel, e($label);
         push @options, $opt;
     }
 

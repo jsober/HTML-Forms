@@ -3,8 +3,8 @@ package HTML::Forms::Input;
 use Moo;
 use MooX::HandlesVia;
 use Types::Standard qw(-types);
-use HTML::Escape qw(escape_html);
 use Carp;
+use HTML::Forms::Util;
 
 has name => (
     is        => 'ro',
@@ -119,17 +119,17 @@ sub render {
 sub render_attributes {
     my $self = shift;
     my $attr = $self->get_attributes;
-    return join ' ', map { sprintf '%s="%s"', $_, escape_html($attr->{$_}) } keys %$attr;
+    return join ' ', map { sprintf '%s="%s"', $_, e($attr->{$_}) } keys %$attr;
 }
 
 sub render_label {
     my $self = shift;
-    return sprintf '<label for="%s">%s</label>', escape_html($self->id), escape_html($self->label);
+    return sprintf '<label for="%s">%s</label>', e($self->id), e($self->label);
 }
 
 sub render_errors {
     my $self  = shift;
-    my $items = join "\n", map { sprintf('<li>%s</li>', escape_html($_)) } @{$self->errors};
+    my $items = join "\n", map { sprintf('<li>%s</li>', e($_)) } @{$self->errors};
     return sprintf "<ul>\n%s\n</ul>", $items;
 }
 
