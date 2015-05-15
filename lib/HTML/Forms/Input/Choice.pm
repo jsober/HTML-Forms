@@ -1,4 +1,4 @@
-package HTML::Forms::Input::ChoiceField;
+package HTML::Forms::Input::Choice;
 
 use Moo;
 use Types::Standard qw(-types);

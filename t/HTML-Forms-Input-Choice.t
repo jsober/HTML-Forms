@@ -3,7 +3,7 @@ use warnings;
 use Test::More;
 use Test::HTML::Content;
 
-my $class = 'HTML::Forms::Input::ChoiceField';
+my $class = 'HTML::Forms::Input::Choice';
 
 use_ok($class);
 
