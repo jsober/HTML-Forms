@@ -25,4 +25,6 @@ sub render_choice_group {
     return sprintf "<ul %s>\n%s\n</ul>", $attributes, join("\n", @$choices);
 }
 
+__PACKAGE__->meta->make_immutable;
+no Moose;
 1;

@@ -16,15 +16,16 @@ WriteMakefile(
     clean               => { FILES => 'HTML-Forms-*' },
 
     PREREQ_PM => {
+        'HTML::Escape'               => 0,
         'Moose'                      => 0,
         'MooseX::AttributeShortcuts' => 0,
-        'Types::Standard'            => 0,
-        'Carp'                       => 0,
-        'HTML::Escape'               => 0,
         'Try::Tiny'                  => 0,
+        'Types::Standard'            => 0,
     },
     BUILD_REQUIRES => {
-        'Test::More'          => 0,
+        'Test::Class'         => 0,
+        'Test::Class::Load'   => 0,
         'Test::HTML::Content' => '0.09',
+        'Test::Most'          => 0,
     },
 );

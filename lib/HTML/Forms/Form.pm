@@ -82,4 +82,6 @@ sub errors {
     return { map { $_ => $self->input->{$_}->errors } $self->input_names };
 }
 
+__PACKAGE__->meta->make_immutable;
+no Moose;
 1;

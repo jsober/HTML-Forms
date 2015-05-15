@@ -142,4 +142,6 @@ sub render_errors {
     return sprintf "<ul>\n%s\n</ul>", $items;
 }
 
+__PACKAGE__->meta->make_immutable;
+no Moose;
 1;

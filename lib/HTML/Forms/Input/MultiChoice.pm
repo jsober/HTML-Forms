@@ -53,4 +53,6 @@ sub render {
     return $self->render_choice_group($self->render_attributes, \@choices);
 }
 
+__PACKAGE__->meta->make_immutable;
+no Moose;
 1;

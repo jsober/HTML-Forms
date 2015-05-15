@@ -30,4 +30,6 @@ sub error_for {
     return '%s is not valid: %s', $name, $self->msg;
 }
 
+__PACKAGE__->meta->make_immutable;
+no Moose;
 1;
