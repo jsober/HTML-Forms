@@ -5,7 +5,10 @@ use MooseX::AttributeShortcuts;
 use Types::Standard qw(-types);
 use Try::Tiny;
 use Carp;
+use Class::Load qw(try_load_class);
 use HTML::Forms::Util;
+
+has widget => (is => 'ro', isa => Str, default => sub {'HTML::Forms::Widget::Text'});
 
 has name => (is => 'ro', isa => Str, required  => 1);
 
@@ -18,6 +21,8 @@ has default => (is => 'ro', required  => 0, predicate => 1);
 has value => (is => 'rw', required  => 0, predicate => 1);
 
 has label => (is => 'ro', isa => Str, required => 1);
+
+has empty_value => (is => 'ro', isa => Str, default => sub { '' });
 
 has validators => (
     is       => 'rw',
@@ -78,10 +83,6 @@ sub _build_is_valid {
     return @{$self->{errors}} ? 0 : 1;
 }
 
-sub empty_value {
-    return '';
-}
-
 sub get_value {
     my $self = shift;
     return $self->value if $self->has_value;
@@ -89,21 +90,30 @@ sub get_value {
     return $self->empty_value;
 }
 
-sub get_attributes {
+# TODO add test
+sub widget_args {
     my $self = shift;
-    my $attr = $self->attributes;
-    return { %$attr, id => $self->id, name => $self->name, value => $self->get_value };
+    return {
+        attr  => $self->attributes,
+        id    => $self->id,
+        name  => $self->name,
+        value => $self->get_value,
+    }
 }
 
 sub render {
     my $self = shift;
-    return sprintf '<input %s>', $self->render_attributes;
-}
+    my $class = $self->widget;
 
-sub render_attributes {
-    my $self = shift;
-    my $attr = $self->get_attributes;
-    return join ' ', map { sprintf '%s="%s"', $_, e($attr->{$_}) } keys %$attr;
+    my ($loaded, $error) = try_load_class($class);
+
+    croak "Unable to load widget $class: $error"
+        if $error;
+
+    my $args   = $self->widget_args;
+    my $widget = $class->new(%$args);
+
+    return $widget->render;
 }
 
 sub render_label {

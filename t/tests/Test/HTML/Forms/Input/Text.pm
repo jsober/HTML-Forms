@@ -11,18 +11,12 @@ sub compile :Tests(startup => 1) {
     use_ok $test->class;
 }
 
-sub type_attr :Tests(2) {
-    my $test = shift;
-    my $input = $test->input;
-    ok my $html = $input->render, 'render';
-    tag_ok $html, 'input', {type => 'text'}, 'attributes';
-}
-
-sub size_attr :Tests(2) {
-    my $test = shift;
-    my $input = $test->input(size => 25);
-    ok my $html = $input->render, 'render';
-    tag_ok $html, 'input', {type => 'text', size => 25}, 'attributes';
+sub widget_args :Tests(2) {
+    my $test  = shift;
+    my $size  = 42;
+    my $input = $test->input(size => $size);
+    my $args  = $input->widget_args;
+    is $args->{size}, $size, 'widget_args: size="25"';
 }
 
 1;

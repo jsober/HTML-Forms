@@ -25,36 +25,12 @@ sub compile :Tests(startup => 1) {
     use_ok $test->class;
 }
 
-sub render :Tests(13) {
-    my $class = shift;
-    my $id = $class->id;
-    my $name = $class->name;
-
-    my $input = $class->input(default => [3, 4]);
-
-    ok my $html = $input->render, 'call render';
-    tag_ok $html, 'select', {name => $name, id => $id}, 'correct tag + attributes';
-    tag_ok $html, 'option', {id => "$id-0", value => '1'}, 'option 1';
-    tag_ok $html, 'option', {id => "$id-1", value => '2'}, 'option 1';
-    tag_ok $html, 'option', {id => "$id-2", value => '3'}, 'option 1';
-    tag_ok $html, 'option', {id => "$id-3", value => '4'}, 'option 1';
-    like $html, qr/<option id="$id-2" value="3" selected>/, 'option 3 selected';
-    like $html, qr/<option id="$id-3" value="4" selected>/, 'option 4 selected';
-
-    $input->value([1, 2]);
-    ok $html = $input->render, 'call render w/ value';
-    like $html, qr/<option id="$id-0" value="1" selected>/, 'option 1 selected';
-    like $html, qr/<option id="$id-1" value="2" selected>/, 'option 2 selected';
-    like $html, qr/<option id="$id-2" value="3">/, 'option 3 not selected';
-    like $html, qr/<option id="$id-3" value="4">/, 'option 4 not selected';
-}
-
-sub default :Tests {
-    my $class = shift;
-    my $input = $class->input;
-    is_deeply $input->get_value, [], 'default value';
-    ok my $html = $input->render, 'call render';
-    unlike $html, qr/selected/, 'no options selected';
+sub widget_args :Tests {
+    my $test  = shift;
+    my $input = $test->input;
+    my $args  = $input->widget_args;
+    ok exists $args->{choices}, 'widget_args: choices key exists';
+    is_deeply $args->{choices}, $test->choices, 'widget_args: choices correct';
 }
 
 1;

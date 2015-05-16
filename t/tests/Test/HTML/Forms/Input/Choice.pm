@@ -26,27 +26,12 @@ sub compile :Tests(startup => 1) {
     use_ok $test->class;
 }
 
-sub render :Tests(12) {
-    my $class = shift;
-    my $id = $class->id;
-    my $name = $class->name;
-
-    my $input = $class->input(default => 3);
-
-    ok my $html = $input->render, 'call render';
-    tag_ok $html, 'select', {name => $name, id => $id}, 'correct tag + attributes';
-    tag_ok $html, 'option', {id => "$id-0", value => '0'}, 'option 0';
-    tag_ok $html, 'option', {id => "$id-1", value => '1'}, 'option 1';
-    tag_ok $html, 'option', {id => "$id-2", value => '2'}, 'option 2';
-    tag_ok $html, 'option', {id => "$id-3", value => '3'}, 'option 3';
-    tag_ok $html, 'option', {id => "$id-4", value => '4'}, 'option 4';
-    like $html, qr/<option id="$id-3" value="3" selected>/, 'option 3 selected';
-
-    $input->value(4);
-    ok $html = $input->render, 'call render w/ set value';
-    tag_ok $html, 'select', {name => $name, id => $id}, 'correct tag + attributes';
-    like $html, qr/<option id="$id-4" value="4" selected>/, 'correct value selected';
-    like $html, qr/<option id="$id-3" value="3">/, 'correct value selected';
+sub widget_args :Tests {
+    my $test  = shift;
+    my $input = $test->input;
+    my $args  = $input->widget_args;
+    ok exists $args->{choices}, 'widget_args: choices key exists';
+    is_deeply $args->{choices}, $test->choices, 'widget_args: choices correct';
 }
 
 1;

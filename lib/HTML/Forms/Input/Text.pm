@@ -5,22 +5,25 @@ use Types::Standard qw(-types);
 
 extends 'HTML::Forms::Input';
 
-has size => (
-    is       => 'ro',
-    isa      => Maybe[Int],
-    required => 0,
+has +widget => (
+    is      => 'ro',
+    isa     => Str,
+    default => sub { 'HTML::Forms::Widget::Text' },
 );
 
-around get_attributes => sub {
-    my $orig   = shift;
-    my $self   = shift;
-    my $result = $self->$orig(@_);
+has size => (
+    is        => 'ro',
+    isa       => Maybe[Int],
+    required  => 0,
+    predicate => 'has_size',
+);
 
-    return {
-        %$result,
-        type => 'text',
-        ($self->size ? (size => $self->size) : ()),
-    };
+around widget_args => sub {
+    my $orig = shift;
+    my $self = shift;
+    my $args = $self->$orig(@_);
+    $args->{size} = $self->size if $self->has_size;
+    return $args;
 };
 
 __PACKAGE__->meta->make_immutable;

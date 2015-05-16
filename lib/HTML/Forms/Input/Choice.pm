@@ -6,47 +6,25 @@ use HTML::Forms::Util;
 
 extends 'HTML::Forms::Input';
 
+has +widget => (
+    is      => 'ro',
+    isa     => Str,
+    default => sub { 'HTML::Forms::Widget::DropDown' },
+);
+
 has choices => (
     is       => 'rw',
     isa      => ArrayRef[Tuple[Str, Defined]],
     required => 1,
 );
 
-around get_attributes => sub {
-    my $orig   = shift;
-    my $self   = shift;
-    my $result = $self->$orig(@_);
-    delete $result->{value};
-    return $result;
-};
-
-sub render_choice {
-    my ($self, $id, $label, $value, $selected) = @_;
-    my $sel = $selected ? ' selected' : '';
-    return sprintf '<option id="%s" value="%s"%s>%s</option>', e($id), e($value), $sel, e($label);
-}
-
-sub render_choice_group {
-    my ($self, $attributes, $choices) = @_;
-    return sprintf "<select %s>\n%s\n</select>", $attributes, join("\n", @$choices);
-}
-
-sub render {
+around widget_args => sub {
+    my $orig = shift;
     my $self = shift;
-    my $selected = $self->get_value;
-    my @choices;
-
-    my $idx = 0;
-    foreach my $tuple (@{$self->choices}) {
-        my ($label, $value) = @$tuple;
-        my $id = sprintf '%s-%d', $self->id, $idx;
-        my $choice = $self->render_choice($id, $label, $value, ($selected eq $value));
-        push @choices, $choice;
-        ++$idx;
-    }
-
-    return $self->render_choice_group($self->render_attributes, \@choices);
-}
+    my $args = $self->$orig(@_);
+    $args->{choices} = $self->choices;
+    return $args;
+};
 
 __PACKAGE__->meta->make_immutable;
 no Moose;

@@ -18,37 +18,23 @@ sub render_label :Test(2) {
     tag_ok $label, 'label', {for => $test->id}, 'render_label: tag';
 }
 
-sub render_empty_value :Test(3) {
+sub get_value_empty :Test(3) {
     my $test = shift;
     my $input = $test->input;
     is $input->get_value, '', 'get_value';
-    ok my $html = $input->render, 'render';
-    tag_ok $html, 'input', {value => ''}, 'render: tag';
 }
 
-sub render_default_value :Test(3) {
+sub get_value_default :Test(3) {
     my $test = shift;
     my $input = $test->input(default => 'foo');
     is $input->get_value, 'foo', 'get_value';
-    ok my $html = $input->render, 'render';
-    tag_ok $html, 'input', {value => 'foo'}, 'render: tag';
 }
 
-sub render_set_value :Test(3) {
+sub get_value_set :Test(3) {
     my $test = shift;
     my $input = $test->input(default => 'foo');
     $input->value('bar');
     is $input->get_value, 'bar', 'get_value';
-    ok my $html = $input->render, 'render';
-    tag_ok $html, 'input', {value => 'bar'}, 'render: tag';
-}
-
-sub render_attributes :Test(3) {
-    my $test = shift;
-    my $input = $test->input(attributes => {foo => 'bar', baz => 'bat'});
-    ok my $html = $input->render, 'render';
-    tag_ok $html, 'input', {name => $test->name, id => $test->id}, 'id and name';
-    tag_ok $html, 'input', {foo => 'bar', baz => 'bat'}, 'custom attributes';
 }
 
 sub is_valid_no_data :Test(1) {
