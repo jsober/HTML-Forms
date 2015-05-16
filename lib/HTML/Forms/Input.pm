@@ -90,7 +90,6 @@ sub get_value {
     return $self->empty_value;
 }
 
-# TODO add test
 sub widget_args {
     my $self = shift;
     return {
@@ -101,6 +100,7 @@ sub widget_args {
     }
 }
 
+# TODO add test
 sub render {
     my $self = shift;
     my $class = $self->widget;

@@ -73,4 +73,18 @@ sub errors :Tests {
     text_ok $html, 'Test Input is a required value';
 }
 
+sub widget_args :Tests {
+    my $test = shift;
+    my $input = $test->input(value => '42');
+
+    my $args = {
+        id    => $test->id,
+        name  => $test->name,
+        value => '42',
+        attr  => {},
+    };
+
+    is_deeply $input->widget_args, $args, 'widget_args structure';
+}
+
 1;
