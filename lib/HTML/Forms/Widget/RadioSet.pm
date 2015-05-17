@@ -1,8 +1,9 @@
-package HTML::Forms::Widget::MultiSelect;
+package HTML::Forms::Widget::RadioSet;
 
 use Moose;
 use MooseX::AttributeShortcuts;
 use Types::Standard qw(-types);
+use HTML::Forms::Util;
 
 extends 'HTML::Forms::Widget::DropDown';
 
@@ -28,8 +29,9 @@ sub render_choice {
 }
 
 sub render_choice_group {
-    my ($self, $attributes, $choices) = @_;
-    return sprintf "<ul %s>\n%s\n</ul>", $attributes, join("\n", @$choices);
+    my ($self, $choices) = @_;
+    my $attr = $self->render_attributes;
+    return sprintf "<ul %s>\n%s\n</ul>", $attr, join("\n", @$choices);
 }
 
 __PACKAGE__->meta->make_immutable;

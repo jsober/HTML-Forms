@@ -26,13 +26,13 @@ sub widget {
     );
 }
 
-sub get_attributes :Test(2) {
-    my $test     = shift;
-    my $widget   = $test->widget;
-    my $expected = {type => 'text', size => $test->size, name => $test->name, id => $test->id, value => $test->value};
+sub render :Test(2) {
+    my $test   = shift;
+    my $widget = $test->widget;
+    my $attr   = {type => 'text', size => $test->size, name => $test->name, id => $test->id, value => $test->value};
 
-    ok my $attr = $widget->get_attributes, 'get_attributes: call';
-    is_deeply $attr, $expected, 'get_attributes: content';
+    ok my $html = $widget->render, 'render: call';
+    tag_ok $html, 'input', $attr, 'render: structure';
 }
 
 1;

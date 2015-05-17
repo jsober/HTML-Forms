@@ -3,6 +3,7 @@ package HTML::Forms::Widget::DropDown;
 use Moose;
 use MooseX::AttributeShortcuts;
 use Types::Standard qw(-types);
+use HTML::Forms::Util;
 
 extends 'HTML::Forms::Widget';
 
