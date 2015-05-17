@@ -2,7 +2,6 @@ package Test::HTML::Forms::Input::RadioSet;
 use base 'Test::HTML::Forms::BaseInputTest';
 
 use Test::Most;
-use Test::HTML::Content;
 
 sub class { 'HTML::Forms::Input::RadioSet' }
 

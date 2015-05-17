@@ -2,7 +2,6 @@ package Test::HTML::Forms::Input::MultiChoice;
 use base 'Test::HTML::Forms::BaseInputTest';
 
 use Test::Most;
-use Test::HTML::Content;
 
 sub class { 'HTML::Forms::Input::MultiChoice' }
 
@@ -25,7 +24,7 @@ sub compile :Tests(startup => 1) {
     use_ok $test->class;
 }
 
-sub widget_args :Tests {
+sub widget_args :Tests(2) {
     my $test  = shift;
     my $input = $test->input;
     my $args  = $input->widget_args;

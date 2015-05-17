@@ -18,26 +18,26 @@ sub render_label :Test(2) {
     tag_ok $label, 'label', {for => $test->id}, 'render_label: tag';
 }
 
-sub get_value_empty :Test(3) {
+sub get_value_empty :Test {
     my $test = shift;
     my $input = $test->input;
     is $input->get_value, '', 'get_value';
 }
 
-sub get_value_default :Test(3) {
+sub get_value_default :Test {
     my $test = shift;
     my $input = $test->input(default => 'foo');
     is $input->get_value, 'foo', 'get_value';
 }
 
-sub get_value_set :Test(3) {
+sub get_value_set :Test {
     my $test = shift;
     my $input = $test->input(default => 'foo');
     $input->value('bar');
     is $input->get_value, 'bar', 'get_value';
 }
 
-sub is_valid_no_data :Test(1) {
+sub is_valid_no_data :Test {
     my $test = shift;
     my $input = $test->input;
     throws_ok { $input->is_valid } qr/Missing form data/, 'no form data';
@@ -60,7 +60,7 @@ sub is_valid_bad :Test(3) {
     is_deeply $input->errors, [sprintf('%s is a required value', $test->label)], 'get errors';
 }
 
-sub errors :Tests {
+sub errors :Tests(4) {
     require HTML::Forms::Validator::Required;
     my $test = shift;
     my $input = $test->input(value => '');
@@ -73,7 +73,7 @@ sub errors :Tests {
     text_ok $html, 'Test Input is a required value';
 }
 
-sub widget_args :Tests {
+sub widget_args :Test {
     my $test = shift;
     my $input = $test->input(value => '42');
 
