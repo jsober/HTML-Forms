@@ -8,7 +8,7 @@ use Carp;
 use Class::Load qw(try_load_class);
 use HTML::Forms::Util;
 
-has widget => (is => 'ro', isa => Str, default => sub {'HTML::Forms::Widget::Text'});
+has widget_class => (is => 'ro', isa => Str, default => sub {'HTML::Forms::Widget::Text'});
 
 has name => (is => 'ro', isa => Str, required  => 1);
 
@@ -83,6 +83,25 @@ sub _build_is_valid {
     return @{$self->{errors}} ? 0 : 1;
 }
 
+has widget => (
+    is      => 'lazy',
+    isa     => InstanceOf['HTML::Forms::Widget'],
+    handles => ['render'],
+);
+
+sub _build_widget {
+    my $self  = shift;
+    my $class = $self->widget_class;
+
+    my ($loaded, $error) = try_load_class($class);
+
+    croak "Unable to load widget $class: $error"
+        if $error;
+
+    my $args = $self->widget_args;
+    return $class->new(%$args);
+}
+
 sub get_value {
     my $self = shift;
     return $self->value if $self->has_value;
@@ -98,22 +117,6 @@ sub widget_args {
         name  => $self->name,
         value => $self->get_value,
     }
-}
-
-# TODO add test
-sub render {
-    my $self = shift;
-    my $class = $self->widget;
-
-    my ($loaded, $error) = try_load_class($class);
-
-    croak "Unable to load widget $class: $error"
-        if $error;
-
-    my $args   = $self->widget_args;
-    my $widget = $class->new(%$args);
-
-    return $widget->render;
 }
 
 sub render_label {

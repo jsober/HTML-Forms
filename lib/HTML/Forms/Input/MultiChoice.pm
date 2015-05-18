@@ -6,7 +6,7 @@ use HTML::Forms::Util;
 
 extends 'HTML::Forms::Input';
 
-has +widget => (
+has +widget_class => (
     is      => 'ro',
     isa     => Str,
     default => sub { 'HTML::Forms::Widget::MultiSelect' },

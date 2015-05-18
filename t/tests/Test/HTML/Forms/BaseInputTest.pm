@@ -8,7 +8,6 @@ sub class  { die 'must be defined in subclass' }
 sub label  { 'Test Input' }
 sub name   { 'test_input' }
 sub id     { 'test-input' }
-sub widget { 'HTML::Forms::Widget::Text' }
 
 sub input {
     my $test = shift;
@@ -17,7 +16,6 @@ sub input {
         label  => $test->label,
         id     => $test->id,
         name   => $test->name,
-        widget => $test->widget,
         @_,
     );
 }
